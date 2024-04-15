@@ -46,3 +46,31 @@ class DuplicatesPipeline:
         else:
             self.names_seen.add(adapter['name'])
             return item
+
+import mysql.connector
+
+class SavingToMySQLPipeline(object):
+
+    def __init__(self):
+        self.create_connection()
+
+    def create_connection(self):
+        self.conn = mysql.connector.connect(
+            host = 'localhost',
+            user = 'root',
+            password = 'root',
+            database = 'chocolate_scraping'
+        )
+        self.curr = self.conn.cursor()
+    def process_item(self, item, spider):
+        self.store_db(item)
+        #we need to return the item below as Scrapy expects us to!
+        return item
+
+    def store_db(self, item):
+        self.curr.execute(""" insert into chocolate_products ( name, price, url)  values (%s,%s,%s)""", (
+            item["name"],
+            item["price"],
+            item["url"]
+        ))
+        self.conn.commit()

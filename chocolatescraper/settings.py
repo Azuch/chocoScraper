@@ -95,4 +95,5 @@ FEED_EXPORT_ENCODING = "utf-8"
 ITEM_PIPELINES = {
     'chocolatescraper.pipelines.PriceToUSDPipeline': 100,
     'chocolatescraper.pipelines.DuplicatesPipeline': 200,
+    'chocolatescraper.pipelines.SavingToMySQLPipeline': 300,
 }
